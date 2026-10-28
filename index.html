@@ -1,0 +1,746 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Deepak Kumar</title>
+<meta name="description" content="Deepak Kumar, Cybersecurity Engineer in Kitchener, ON. Incident response, penetration testing and secure websites for small businesses in Canada and the US.">
+<meta property="og:title" content="Deepak Kumar · Cybersecurity Engineer">
+<meta property="og:description" content="I built it. I broke it. Now I defend it. Incident response, VAPT and secure web development.">
+<meta property="og:type" content="website">
+<meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#fbfbfd" media="(prefers-color-scheme: light)">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z' fill='%230071e3'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+body{margin:0}
+img{max-width:100%}
+[hidden]{display:none!important}
+
+/* Layout: Apple-style product page — glass nav, giant centered hero with a live "console" product shot, scroll-scrubbed statement, bento grid, sticky expanding band, marquee, contact. */
+:root{
+  --bg:#fbfbfd; --bg2:#f2f2f5; --card:#ffffff; --fg:#1d1d1f; --fg2:#6e6e73; --dim:#c8c8cf;
+  --line:rgba(0,0,30,.09); --accent:#0071e3; --accent2:#0aa6a0; --glass:rgba(251,251,253,.74);
+  --console:#0c0d12; --consolefg:#f2f3f7; --consolemute:#8a8f9e; --consoleline:rgba(255,255,255,.08);
+  --ok:#28a745; --warn:#e08600; --crit:#e5352b; --shadow:0 30px 80px -30px rgba(0,20,60,.28);
+  --sans:-apple-system,BlinkMacSystemFont,"SF Pro Display","SF Pro Text","Inter",system-ui,"Segoe UI",Roboto,sans-serif;
+  --mono:ui-monospace,"SF Mono","JetBrains Mono",Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#000; --bg2:#0d0d10; --card:#141417; --fg:#f5f5f7; --fg2:#a1a1a8; --dim:#3b3b42;
+  --line:rgba(255,255,255,.1); --accent:#2997ff; --accent2:#4fe0d2; --glass:rgba(0,0,0,.62);
+  --console:#111218; --consolefg:#f2f3f7; --consolemute:#8a8f9e; --consoleline:rgba(255,255,255,.08);
+  --ok:#30d158; --warn:#ff9f0a; --crit:#ff453a; --shadow:0 30px 80px -30px rgba(0,0,0,.9); color-scheme:dark }}
+:root[data-theme="dark"]{
+  --bg:#000; --bg2:#0d0d10; --card:#141417; --fg:#f5f5f7; --fg2:#a1a1a8; --dim:#3b3b42;
+  --line:rgba(255,255,255,.1); --accent:#2997ff; --accent2:#4fe0d2; --glass:rgba(0,0,0,.62);
+  --console:#111218; --consolefg:#f2f3f7; --consolemute:#8a8f9e; --consoleline:rgba(255,255,255,.08);
+  --ok:#30d158; --warn:#ff9f0a; --crit:#ff453a; --shadow:0 30px 80px -30px rgba(0,0,0,.9); color-scheme:dark }
+
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--fg);font-family:var(--sans);font-size:17px;line-height:1.5;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:60;background:var(--glass)}
+a{color:inherit;text-decoration:none}
+.wrap{max-width:1080px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+section{padding-block:clamp(72px,12vw,140px)}
+h1,h2,h3{margin:0;letter-spacing:-.025em;text-wrap:balance}
+p{margin:0}
+.eyebrow{font-size:14px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--accent)}
+.h2{font-size:clamp(36px,6.4vw,64px);font-weight:700;line-height:1.05}
+.lead{font-size:clamp(19px,2.4vw,24px);color:var(--fg2);max-width:640px;line-height:1.4;font-weight:500}
+.grad{background:linear-gradient(100deg,var(--accent) 10%,var(--accent2) 90%);-webkit-background-clip:text;background-clip:text;color:transparent}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:8px}
+
+/* Nav */
+.nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:50;background:var(--glass);backdrop-filter:saturate(180%) blur(20px);-webkit-backdrop-filter:saturate(180%) blur(20px);border-bottom:1px solid var(--line)}
+.nav .wrap{display:flex;align-items:center;justify-content:space-between;height:52px;gap:16px}
+.brand{font-weight:600;font-size:16px;letter-spacing:-.01em;display:flex;align-items:center;gap:8px}
+.brand svg{width:18px;height:18px;color:var(--accent)}
+.links{display:flex;gap:26px;font-size:13px;color:var(--fg2)}
+.links a:hover{color:var(--fg)}
+.pill{display:inline-flex;align-items:center;justify-content:center;gap:6px;border:0;cursor:pointer;font:600 14px var(--sans);padding:8px 16px;border-radius:999px;background:var(--accent);color:#fff;transition:transform .25s cubic-bezier(.2,.8,.2,1),filter .25s}
+.pill:hover{filter:brightness(1.08);transform:scale(1.03)}
+.pill.big{font-size:17px;padding:13px 24px}
+.pill.ghost{background:transparent;color:var(--accent);box-shadow:inset 0 0 0 1.5px var(--accent)}
+@media (max-width:720px){.links{display:none}}
+
+/* Hero */
+.hero{text-align:center;padding-block:clamp(56px,10vw,110px) 40px;position:relative}
+.hero .eyebrow{display:inline-flex;align-items:center;gap:8px}
+.dot{flex:none;width:8px;height:8px;min-width:8px;aspect-ratio:1;border-radius:50%;background:var(--ok);box-shadow:0 0 0 0 var(--ok);animation:ping 2.2s infinite}
+@keyframes ping{0%{box-shadow:0 0 0 0 color-mix(in srgb,var(--ok) 60%,transparent)}100%{box-shadow:0 0 0 10px transparent}}
+.hero h1{font-size:clamp(46px,10.5vw,112px);font-weight:800;line-height:.98;letter-spacing:-.045em;margin:18px auto 22px;max-width:980px}
+.hero .lead{margin:0 auto}
+.cta{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-top:32px}
+.in{animation:rise-in 1.1s cubic-bezier(.16,1,.3,1) both}
+.in.d1{animation-delay:.08s}.in.d2{animation-delay:.18s}.in.d3{animation-delay:.3s}.in.d4{animation-delay:.45s}
+@keyframes rise-in{from{opacity:.25;transform:translateY(26px);filter:blur(10px)}to{opacity:1;transform:none;filter:none}}
+
+/* Console product shot */
+.stage{perspective:1400px;margin-top:clamp(48px,8vw,80px)}
+.console{max-width:860px;margin:0 auto;background:var(--console);color:var(--consolefg);border-radius:28px;padding:18px 18px 22px;text-align:left;box-shadow:var(--shadow),0 0 0 1px var(--consoleline);transform:rotateX(calc(var(--tilt,0) * 1deg)) scale(calc(.94 + var(--grow,1) * .06));transform-origin:50% 0;transition:transform .1s linear}
+.bar{display:flex;align-items:center;gap:7px;padding:2px 4px 14px;border-bottom:1px solid var(--consoleline)}
+.bar i{width:11px;height:11px;border-radius:50%;background:#ff5f57}.bar i:nth-child(2){background:#febc2e}.bar i:nth-child(3){background:#28c840}
+.bar span{margin-left:10px;font:500 12px var(--mono);color:var(--consolemute)}
+.bar b{margin-left:auto;font:500 11px var(--mono);color:var(--consolemute);display:flex;align-items:center;gap:6px}
+.feed{list-style:none;margin:0;padding:6px 0 0;display:grid}
+.row{display:grid;grid-template-columns:auto 1fr auto;gap:14px;align-items:center;padding:13px 6px;border-bottom:1px solid var(--consoleline);animation:slide .7s cubic-bezier(.16,1,.3,1) both}
+.row:last-child{border-bottom:0}
+@keyframes slide{from{opacity:.2;transform:translateY(-14px)}to{opacity:1;transform:none}}
+.sev{width:9px;height:34px;border-radius:4px}
+.sev.crit{background:var(--crit)}.sev.high{background:var(--warn)}.sev.med{background:#5e9bff}
+.row div{min-width:0}
+.row strong{display:block;font-size:15px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.row small{font:400 12px var(--mono);color:var(--consolemute)}
+.state{font:500 11px var(--mono);padding:5px 10px;border-radius:999px;background:rgba(255,255,255,.07);color:var(--consolemute);white-space:nowrap;transition:all .4s}
+.state.done{background:color-mix(in srgb,var(--ok) 18%,transparent);color:var(--ok)}
+
+/* Stats */
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:clamp(16px,3vw,32px);text-align:center}
+.stat b{display:block;font-size:clamp(44px,7vw,76px);font-weight:700;letter-spacing:-.04em;line-height:1;font-variant-numeric:tabular-nums}
+.stat span{display:block;margin-top:10px;color:var(--fg2);font-size:15px;line-height:1.35}
+@media (max-width:760px){.stats{grid-template-columns:repeat(2,1fr);row-gap:44px}}
+
+/* Scrub statement */
+.scrub{font-size:clamp(30px,5.4vw,58px);font-weight:700;line-height:1.12;letter-spacing:-.03em;max-width:980px}
+.js-scrub .w{color:var(--dim);transition:color .35s}
+.js-scrub .w.lit{color:var(--fg)}
+.js-scrub .w.lit.hl{color:var(--accent)}
+
+/* Bento */
+.bento{display:grid;grid-template-columns:repeat(6,1fr);gap:18px;margin-top:48px}
+.tile{background:var(--card);border-radius:28px;padding:30px;display:flex;flex-direction:column;gap:12px;min-width:0;box-shadow:0 0 0 1px var(--line);transition:transform .5s cubic-bezier(.16,1,.3,1),box-shadow .5s}
+.tile:hover{transform:translateY(-6px) scale(1.01);box-shadow:0 0 0 1px var(--line),var(--shadow)}
+.tile h3{font-size:24px;font-weight:700;line-height:1.15}
+.tile p{color:var(--fg2);font-size:16px}
+.tile .ico{width:44px;height:44px;border-radius:12px;display:grid;place-items:center;background:color-mix(in srgb,var(--accent) 12%,transparent);color:var(--accent)}
+.tile .ico svg{width:24px;height:24px}
+.s3{grid-column:span 3}.s2{grid-column:span 2}.s4{grid-column:span 4}.s6{grid-column:span 6}
+.tile.web{background:linear-gradient(135deg,color-mix(in srgb,var(--accent) 10%,var(--card)),var(--card) 60%)}
+.tile.dark{background:var(--console);color:var(--consolefg);box-shadow:0 0 0 1px var(--consoleline)}
+.tile.dark p{color:var(--consolemute)}
+pre.kql{margin:6px 0 0;padding:16px;border-radius:16px;background:rgba(255,255,255,.05);font:400 12.5px/1.65 var(--mono);color:#cfd6e6;overflow-x:auto}
+.kql .k{color:#ff7ab2}.kql .s{color:#ffa657}.kql .f{color:#6bdfff}
+.tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:auto;padding-top:8px}
+.tags span{font-size:12.5px;font-weight:500;padding:5px 11px;border-radius:999px;background:var(--bg2);color:var(--fg2)}
+.attack{display:grid;grid-template-columns:repeat(7,1fr);gap:5px;margin-top:6px}
+.attack i{aspect-ratio:1;border-radius:5px;background:var(--bg2);animation:heat 4s infinite;animation-delay:calc(var(--d) * .13s)}
+@keyframes heat{0%,70%,100%{background:var(--bg2)}20%{background:color-mix(in srgb,var(--accent) 70%,transparent)}}
+@media (max-width:860px){.s3,.s2,.s4{grid-column:span 6}.tile{padding:26px}}
+
+/* Expanding band */
+.expand{height:180vh;position:relative}
+.expand .sticky{position:sticky;top:0;height:100vh;display:grid;place-items:center;overflow:hidden}
+.panel{width:calc(100% - (1 - var(--p,1)) * 18vw);max-width:100%;height:calc(100% - (1 - var(--p,1)) * 26vh);border-radius:calc((1 - var(--p,1)) * 40px + 0px);background:radial-gradient(120% 80% at 50% 110%,color-mix(in srgb,var(--accent) 55%,#000) 0%,#05070d 60%);color:#f5f5f7;display:grid;place-items:center;text-align:center;padding-inline:max(16px,env(safe-area-inset-left,0px))}
+.panel h2{font-size:clamp(40px,9vw,104px);font-weight:800;letter-spacing:-.045em;line-height:1;transform:scale(calc(.85 + var(--p,1) * .15))}
+.panel p{margin:20px auto 0;max-width:560px;color:#b8bfd0;font-size:clamp(17px,2.2vw,21px)}
+
+/* Case study */
+.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;margin-top:48px;counter-reset:s}
+.step{padding:26px 24px;border-radius:24px;background:var(--bg2);display:flex;flex-direction:column;gap:10px;min-width:0}
+.step em{font:500 12px var(--mono);font-style:normal;color:var(--accent)}
+.step h3{font-size:21px;font-weight:700}
+.step p{color:var(--fg2);font-size:15.5px}
+.track{height:3px;border-radius:3px;background:var(--line);margin-top:28px;overflow:hidden}
+.track i{display:block;height:100%;width:calc(var(--q,1) * 100%);background:linear-gradient(90deg,var(--accent),var(--accent2))}
+@media (max-width:860px){.steps{grid-template-columns:1fr 1fr}}
+@media (max-width:520px){.steps{grid-template-columns:1fr}}
+
+/* Experience */
+.job{display:grid;grid-template-columns:280px 1fr;gap:clamp(24px,5vw,64px);margin-top:48px;align-items:start}
+.job + .job{margin-top:72px}
+.job aside{position:sticky;top:90px}
+.job aside h3{font-size:28px;font-weight:700}
+.job aside p{color:var(--fg2);margin-top:6px}
+.job aside .when{display:inline-block;margin-top:14px;font:500 13px var(--mono);padding:6px 12px;border-radius:999px;background:var(--bg2);color:var(--fg2)}
+.job ul{list-style:none;margin:0;padding:0;display:grid;gap:0}
+.job li{padding:20px 0;border-top:1px solid var(--line);font-size:18px;line-height:1.45;color:var(--fg2)}
+.job li strong{color:var(--fg);font-weight:600}
+@media (max-width:760px){.job{grid-template-columns:1fr}.job aside{position:static}}
+
+/* Experience path: vertical timeline, newest on top */
+.path{position:relative;display:grid;gap:22px;margin-top:52px;padding-left:46px}
+.path::before,.path .fillline{content:"";position:absolute;left:13px;top:34px;width:3px;border-radius:3px}
+.path::before{bottom:12px;background:var(--line)}
+.path .fillline{height:calc((100% - 46px) * var(--r,1));background:linear-gradient(180deg,var(--accent),var(--accent2))}
+.stop{position:relative;background:var(--card);border-radius:28px;padding:28px;display:grid;grid-template-columns:230px 1fr;gap:8px 36px;box-shadow:0 0 0 1px var(--line);min-width:0;transition:transform .5s cubic-bezier(.16,1,.3,1)}
+.stop:hover{transform:translateX(6px)}
+.stop::before{content:"";position:absolute;left:-40px;top:28px;width:17px;height:17px;border-radius:50%;background:var(--bg2);box-shadow:0 0 0 3px var(--accent);z-index:1}
+.stop::after{content:"";position:absolute;left:-23px;top:35px;width:23px;height:3px;background:var(--line)}
+.stop .meta,.stop .story{min-width:0;display:flex;flex-direction:column;gap:4px}
+.stop .when{align-self:flex-start;display:inline-flex;align-items:center;gap:7px;font:500 12.5px var(--mono);padding:6px 12px;border-radius:999px;background:var(--bg2);color:var(--fg2);margin-bottom:10px}
+.stop .role{font-weight:600;font-size:17px}
+.stop .org{color:var(--fg2);font-size:15px}
+.stop h3{font-size:32px;font-weight:800}
+.stop .story p{color:var(--fg2);font-size:16.5px;margin-top:4px}
+.stop.now{background:var(--console);color:var(--consolefg);box-shadow:0 0 0 1px var(--consoleline),var(--shadow)}
+.stop.now::before{background:var(--accent);box-shadow:0 0 0 3px var(--accent)}
+@keyframes node{50%{box-shadow:0 0 0 3px var(--accent),0 0 0 14px color-mix(in srgb,var(--accent) 8%,transparent)}}
+.stop.now .org,.stop.now .story p{color:var(--consolemute)}
+.stop.now .when{background:rgba(255,255,255,.08);color:var(--consolefg)}
+.stop.now h3{background:linear-gradient(100deg,#2997ff,#4fe0d2);-webkit-background-clip:text;background-clip:text;color:transparent}
+.origin{position:relative;font:500 12.5px var(--mono);color:var(--fg2);text-transform:uppercase;letter-spacing:.08em;padding-top:2px}
+.origin::before{content:"";position:absolute;left:-36px;top:4px;width:9px;height:9px;border-radius:50%;background:var(--fg2)}
+@media (max-width:760px){.path{padding-left:36px}.path::before,.path .fillline{left:8px}.stop{grid-template-columns:1fr;padding:24px}.stop::before{left:-35px}.stop::after{left:-18px;width:18px}.origin::before{left:-31px}.stop h3{margin-top:8px}}
+.wins{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;margin-top:18px}
+.win{padding:24px;border-radius:24px;background:var(--card);box-shadow:0 0 0 1px var(--line);display:flex;flex-direction:column;gap:8px;min-width:0}
+.win b{font-size:clamp(30px,4vw,40px);font-weight:800;letter-spacing:-.035em;line-height:1;color:var(--accent)}
+.win span{color:var(--fg2);font-size:15px;line-height:1.4}
+.why{margin-top:56px;padding-top:36px;border-top:1px solid var(--line);display:grid;grid-template-columns:280px 1fr;gap:clamp(24px,5vw,64px)}
+.why h3{font-size:28px;font-weight:700}
+.why ul{list-style:none;margin:0;padding:0;display:grid;gap:14px}
+.why li{font-size:19px;color:var(--fg2);line-height:1.4}
+.why li strong{color:var(--fg)}
+@media (max-width:860px){.wins{grid-template-columns:1fr 1fr}.why{grid-template-columns:1fr}}
+
+/* Hero availability, chips, social */
+.avail{display:inline-flex;align-items:center;gap:8px;margin-top:20px;font-size:14px;font-weight:600;padding:8px 14px;border-radius:999px;background:color-mix(in srgb,var(--ok) 12%,transparent);color:var(--fg)}
+.chips{display:flex;flex-wrap:wrap;gap:7px;margin-top:14px}
+.chips span{font-size:12.5px;font-weight:500;padding:5px 11px;border-radius:999px;background:var(--bg2);color:var(--fg2)}
+.stop.now .chips span{background:rgba(255,255,255,.08);color:var(--consolefg)}
+.social{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:18px}
+.social svg{width:16px;height:16px}
+
+/* Websites */
+.sub{margin-top:52px;font:500 12.5px var(--mono);text-transform:uppercase;letter-spacing:.08em;color:var(--fg2)}
+.demos{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:16px}
+.demo{margin:0;min-width:0;display:flex;flex-direction:column;transition:transform .5s cubic-bezier(.16,1,.3,1)}
+.demo:hover{transform:translateY(-8px)}
+.dbar{display:flex;align-items:center;gap:5px;padding:10px 12px;border-radius:18px 18px 0 0;background:var(--d2);border-bottom:1px solid rgba(0,0,0,.08)}
+.dbar i{width:8px;height:8px;border-radius:50%;background:rgba(0,0,0,.18)}
+.dbar span{margin-left:8px;font:500 10.5px var(--mono);color:#55555c;background:rgba(255,255,255,.7);padding:3px 10px;border-radius:999px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
+.dsite{border-radius:0 0 18px 18px;padding:14px;display:flex;flex-direction:column;gap:12px;background:var(--d2);color:var(--d1);box-shadow:var(--shadow)}
+.dnav{display:flex;justify-content:space-between;gap:8px;font-size:12px;align-items:center}
+.dnav b{font-weight:700;white-space:nowrap}
+.dnav span{font-size:10px;opacity:.65;white-space:nowrap}
+.dhero{background:var(--d1);color:var(--d2);border-radius:12px;padding:20px 16px;display:flex;flex-direction:column;gap:8px;min-height:150px}
+.dhero small{font-size:10px;text-transform:uppercase;letter-spacing:.1em;opacity:.7}
+.dhero strong{font-size:21px;line-height:1.1;letter-spacing:-.02em}
+.dhero em{align-self:flex-start;font-style:normal;font-size:11px;font-weight:600;padding:6px 12px;border-radius:999px;background:var(--d3);color:#fff;margin-top:auto}
+.dgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.dgrid i{aspect-ratio:4/3;border-radius:8px;background:color-mix(in srgb,var(--d3) 30%,var(--d2))}
+.dgrid i:nth-child(2){background:color-mix(in srgb,var(--d1) 22%,var(--d2))}
+.demo figcaption{display:flex;flex-direction:column;gap:2px;padding:14px 4px 0}
+.demo figcaption b{font-size:18px}
+.demo figcaption span{color:var(--fg2);font-size:15px}
+.included{margin-top:64px;display:grid;grid-template-columns:280px 1fr;gap:clamp(24px,5vw,64px);padding-top:36px;border-top:1px solid var(--line)}
+.included h3,.process h3,.faq h3{font-size:28px;font-weight:700}
+.included ul{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:1fr 1fr;gap:16px 28px}
+.included li{color:var(--fg2);font-size:17px;padding-left:28px;position:relative}
+.included li::before{content:"";position:absolute;left:0;top:4px;width:18px;height:18px;border-radius:50%;background:var(--accent) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 12 4 4 8-8'/%3E%3C/svg%3E") center/12px no-repeat}
+.included li strong{color:var(--fg);font-weight:600}
+.plans{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:64px;align-items:start}
+.plan{position:relative;background:var(--card);border-radius:28px;padding:30px;box-shadow:0 0 0 1px var(--line);display:flex;flex-direction:column;gap:10px;min-width:0}
+.plan.pop{box-shadow:0 0 0 2px var(--accent),var(--shadow)}
+.flag{position:absolute;top:-13px;left:30px;font-size:12px;font-weight:700;padding:5px 12px;border-radius:999px;background:var(--accent);color:#fff}
+.pname{font-weight:600;font-size:18px}
+.price{display:flex;align-items:baseline;gap:8px}
+.price b{font-size:52px;font-weight:800;letter-spacing:-.045em;line-height:1;font-variant-numeric:tabular-nums}
+.price span{color:var(--fg2);font-size:15px}
+.pfor{color:var(--fg2);font-size:15.5px}
+.plan ul{list-style:none;margin:8px 0 0;padding:16px 0 0;border-top:1px solid var(--line);display:grid;gap:10px;font-size:15.5px}
+.plan li::before{content:"✓";color:var(--accent);font-weight:700;margin-right:10px}
+.fine{margin-top:18px;color:var(--fg2);font-size:14px;text-align:center}
+.process{margin-top:72px}
+.process ol{list-style:none;margin:28px 0 0;padding:0;display:grid;grid-template-columns:repeat(4,1fr);gap:18px;counter-reset:st}
+.process li{counter-increment:st;padding:24px;border-radius:24px;background:var(--bg2);display:flex;flex-direction:column;gap:6px;min-width:0}
+.process li::before{content:counter(st);width:30px;height:30px;border-radius:50%;display:grid;place-items:center;background:var(--accent);color:#fff;font-weight:700;font-size:14px;margin-bottom:6px}
+.process li b{font-size:19px}
+.process li span{color:var(--fg2);font-size:15.5px}
+.faq{margin-top:72px;max-width:760px;margin-inline:auto}
+.faq h3{margin-bottom:16px}
+.faq details{border-bottom:1px solid var(--line)}
+.faq summary{cursor:pointer;list-style:none;padding:20px 36px 20px 0;font-size:18px;font-weight:600;position:relative}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary::after{content:"+";position:absolute;right:4px;top:50%;transform:translateY(-50%);font-size:26px;font-weight:400;color:var(--accent);transition:transform .3s}
+.faq details[open] summary::after{transform:translateY(-50%) rotate(45deg)}
+.faq details p{color:var(--fg2);padding-bottom:20px;font-size:16.5px}
+@media (max-width:860px){.demos,.plans{grid-template-columns:1fr}.demos{gap:36px}.process ol{grid-template-columns:1fr 1fr}.included{grid-template-columns:1fr}.plans{gap:30px}}
+@media (max-width:520px){.included ul,.process ol{grid-template-columns:1fr}}
+
+/* Marquee */
+.marquee{overflow:hidden;margin-top:44px;-webkit-mask-image:linear-gradient(90deg,transparent,#000 10%,#000 90%,transparent);mask-image:linear-gradient(90deg,transparent,#000 10%,#000 90%,transparent)}
+.lane{display:flex;gap:12px;width:max-content;animation:scroll 42s linear infinite;padding-block:6px}
+.lane.rev{animation-direction:reverse;animation-duration:50s}
+.marquee:hover .lane{animation-play-state:paused}
+.lane span{white-space:nowrap;font-size:16px;font-weight:600;padding:14px 22px;border-radius:18px;background:var(--card);box-shadow:0 0 0 1px var(--line)}
+@keyframes scroll{to{transform:translateX(-50%)}}
+
+/* Certs */
+.certs{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:48px}
+.cert{position:relative;border-radius:28px;padding:30px;background:var(--card);box-shadow:0 0 0 1px var(--line);overflow:hidden;min-width:0;display:flex;flex-direction:column;gap:6px;transition:transform .5s cubic-bezier(.16,1,.3,1)}
+.cert:hover{transform:translateY(-6px)}
+.cert::after{content:"";position:absolute;inset:auto -30% -60% -30%;height:120%;background:radial-gradient(closest-side,color-mix(in srgb,var(--c) 30%,transparent),transparent);pointer-events:none}
+.cert b{font-size:44px;font-weight:800;letter-spacing:-.04em;color:var(--c)}
+.cert span{font-weight:600;font-size:17px}
+.cert small{color:var(--fg2);font-size:14px}
+@media (max-width:760px){.certs{grid-template-columns:1fr}}
+
+/* Contact */
+.contact{text-align:center}
+.contact .h2{font-size:clamp(52px,11vw,120px);font-weight:800;letter-spacing:-.05em}
+.mail{display:inline-flex;align-items:center;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:34px;padding:10px 10px 10px 24px;border-radius:999px;background:var(--bg2);box-shadow:0 0 0 1px var(--line);max-width:100%}
+.mail code{font:500 clamp(15px,2.4vw,19px) var(--mono);user-select:all;word-break:break-all}
+.meta{display:flex;gap:28px;justify-content:center;flex-wrap:wrap;margin-top:40px;color:var(--fg2);font-size:15px}
+.meta div b{display:block;color:var(--fg);font-weight:600}
+footer{border-top:1px solid var(--line);padding-block:26px;color:var(--fg2);font-size:13px}
+footer .wrap{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+
+/* Scroll-linked reveal (pure CSS where supported) */
+@supports (animation-timeline:view()){
+  .reveal{animation:rise linear both;animation-timeline:view();animation-range:entry 0% cover 28%}
+  @keyframes rise{from{opacity:0;transform:translateY(60px) scale(.96)}to{opacity:1;transform:none}}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none!important;transition:none!important}
+  html{scroll-behavior:auto}
+  .expand{height:auto}.expand .sticky{position:static;height:auto;padding-block:40px}
+  .panel{--p:1!important;min-height:70vh}
+}
+</style>
+
+</head>
+<body>
+<header class="nav">
+  <div class="wrap">
+    <a class="brand" href="#top"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>Deepak Kumar</a>
+    <nav class="links"><a href="#work">Expertise</a><a href="#case">Case study</a><a href="#experience">Experience</a><a href="#certs">Certifications</a><a href="#websites">Websites</a></nav>
+    <a class="pill" href="#contact">Contact</a>
+  </div>
+</header>
+
+<main id="top">
+  <section class="hero">
+    <div class="wrap">
+      <p class="eyebrow in"><span class="dot"></span>Cybersecurity Engineer · Incident Response</p>
+      <h1 class="in d1">Threats stop <span class="grad">here.</span></h1>
+      <p class="lead in d2">I've spent four years investigating, containing and closing security incidents at a major Canadian bank. 6+ years in tech, across development, penetration testing and security operations.</p>
+      <p class="avail in d2"><span class="dot"></span>Open to full-time roles · Remote or hybrid</p>
+      <div class="cta in d3">
+        <a class="pill big" href="#experience">Hire me for a security role</a>
+        <a class="pill big ghost" href="#websites">Get a website built ›</a>
+      </div>
+      <div class="stage in d4">
+        <div class="console" id="console">
+          <div class="bar"><i></i><i></i><i></i><span>soc / live-triage</span><b><span class="dot"></span>monitoring</b></div>
+          <ul class="feed" id="feed">
+            <li class="row"><i class="sev crit"></i><div><strong>Encoded PowerShell execution</strong><small>Defender for Endpoint · T1059.001</small></div><span class="state done">Host isolated</span></li>
+            <li class="row"><i class="sev high"></i><div><strong>Impossible travel sign-in</strong><small>Entra ID · Sentinel · T1078</small></div><span class="state done">Sessions revoked</span></li>
+            <li class="row"><i class="sev med"></i><div><strong>Reported phish, spoofed sender</strong><small>M365 · DMARC fail · T1566</small></div><span class="state done">Mailbox purged</span></li>
+            <li class="row"><i class="sev high"></i><div><strong>Outbound beacon to known C2</strong><small>CrowdStrike · Splunk · T1071</small></div><span class="state done">IOC blocked</span></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section style="padding-top:40px">
+    <div class="wrap stats reveal">
+      <div class="stat"><b data-n="6" data-s="+">6+</b><span>years in tech, from<br>code to cybersecurity</span></div>
+      <div class="stat"><b data-n="20" data-s="%">20%</b><span>faster mean time<br>to respond (MTTR)</span></div>
+      <div class="stat"><b data-n="15" data-s="%">15%</b><span>fewer false positives<br>from detection tuning</span></div>
+      <div class="stat"><b data-n="80" data-p="60–">60–80</b><span>alerts investigated<br>every month</span></div>
+    </div>
+  </section>
+
+  <section style="padding-top:0">
+    <div class="wrap">
+      <p class="scrub" id="scrub">Every alert is a question. I find the answer fast, contain the threat, and make sure the same attack never gets that far again.</p>
+    </div>
+  </section>
+
+  <section id="work" style="background:var(--bg2)">
+    <div class="wrap">
+      <p class="eyebrow reveal">Expertise</p>
+      <h2 class="h2 reveal" style="margin-top:12px">Built for the<br>whole incident.</h2>
+      <div class="bento">
+        <article class="tile s4 dark reveal">
+          <div class="ico" style="background:rgba(255,255,255,.08);color:#6bdfff"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m8 9-4 3 4 3M16 9l4 3-4 3M13 6l-2 12"/></svg></div>
+          <h3>Detection engineering</h3>
+          <p>I write and tune detection rules in Sentinel (KQL) and Splunk (SPL) that catch real attacks and stay quiet otherwise.</p>
+<pre class="kql"><span class="f">SigninLogs</span>
+| <span class="k">where</span> ResultType == <span class="s">0</span>
+| <span class="k">summarize</span> Countries = <span class="f">dcount</span>(Location)
+    <span class="k">by</span> UserPrincipalName, <span class="f">bin</span>(TimeGenerated, <span class="s">1h</span>)
+| <span class="k">where</span> Countries > <span class="s">1</span></pre>
+        </article>
+        <article class="tile s2 reveal">
+          <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg></div>
+          <h3>Incident response</h3>
+          <p>Tier 2/3 escalation point. Triage, scope, contain and run the root-cause review afterward.</p>
+          <div class="tags"><span>NIST 800-61</span><span>RCA</span><span>Forensics</span></div>
+        </article>
+        <article class="tile s2 reveal">
+          <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg></div>
+          <h3>Threat hunting</h3>
+          <p>Hunting for activity that no alert caught, mapped to MITRE ATT&amp;CK.</p>
+          <div class="attack" aria-hidden="true">
+            <i style="--d:0"></i><i style="--d:5"></i><i style="--d:2"></i><i style="--d:9"></i><i style="--d:4"></i><i style="--d:11"></i><i style="--d:1"></i>
+            <i style="--d:7"></i><i style="--d:3"></i><i style="--d:12"></i><i style="--d:6"></i><i style="--d:0"></i><i style="--d:8"></i><i style="--d:10"></i>
+          </div>
+        </article>
+        <article class="tile s2 reveal">
+          <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg></div>
+          <h3>Phishing &amp; BEC</h3>
+          <p>Header forensics, sandboxing and clean-up, from the first report to the blocked IOC.</p>
+          <div class="tags"><span>SPF · DKIM · DMARC</span><span>Any.run</span></div>
+        </article>
+        <article class="tile s2 reveal">
+          <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.5 19a4.5 4.5 0 1 0-1.4-8.8A6 6 0 0 0 4.5 13 3 3 0 0 0 6 19z"/></svg></div>
+          <h3>Cloud &amp; identity</h3>
+          <p>Monitoring Entra ID, AWS and GCP for privilege abuse and risky sign-ins.</p>
+          <div class="tags"><span>Entra ID</span><span>CloudTrail</span><span>GuardDuty</span></div>
+        </article>
+        <article class="tile s2 reveal">
+          <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 4 14h7l-1 8 9-12h-7z"/></svg></div>
+          <h3>Automation</h3>
+          <p>Python and PowerShell playbooks that cut the repetitive steps out of triage.</p>
+          <div class="tags"><span>Python</span><span>PowerShell</span><span>SOAR</span></div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <div class="expand" id="expand">
+    <div class="sticky">
+      <div class="panel" id="panel">
+        <div>
+          <h2>Contained in<br>hours, not days.</h2>
+          <p>Banking runs on trust. I spent four years protecting it under OSFI, PCI-DSS and SOC 2 expectations.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <section id="case">
+    <div class="wrap">
+      <p class="eyebrow reveal">Case study</p>
+      <h2 class="h2 reveal" style="margin-top:12px">One account. Four moves.</h2>
+      <p class="lead reveal" style="margin-top:18px">An employee account started signing in from places it never had before. Here is how it was handled.</p>
+      <div class="track" id="track"><i></i></div>
+      <div class="steps">
+        <div class="step reveal"><em>Step 1 · Detect</em><h3>Spot the pattern</h3><p>Correlated Entra ID sign-in logs with SIEM alerts and confirmed the unusual locations.</p></div>
+        <div class="step reveal"><em>Step 2 · Scope</em><h3>Find the reach</h3><p>Matched endpoint and identity logs to identify every affected system within a few hours.</p></div>
+        <div class="step reveal"><em>Step 3 · Contain</em><h3>Shut it down</h3><p>Coordinated restricted access, credential resets and session revocation across teams.</p></div>
+        <div class="step reveal"><em>Step 4 · Improve</em><h3>Close the gap</h3><p>Turned the findings into better alerting for suspicious sign-in patterns.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="experience" style="background:var(--bg2)">
+    <div class="wrap">
+      <p class="eyebrow reveal">Experience</p>
+      <h2 class="h2 reveal" style="margin-top:12px">I built it. I broke it.<br><span class="grad">Now I defend it.</span></h2>
+      <p class="lead reveal" style="margin-top:18px">6+ years from writing code, to testing it like an attacker, to protecting a major bank. I see every system from all three sides.</p>
+
+      <div class="path" id="path">
+        <span class="fillline" aria-hidden="true"></span>
+        <article class="stop now reveal">
+          <div class="meta">
+            <span class="when">07/2022 – 10/2026</span>
+            <p class="role">Cybersecurity Engineer</p>
+            <p class="org">CIBC · Toronto, ON</p>
+          </div>
+          <div class="story">
+            <h3>The defender.</h3>
+            <p>Tier 2/3 escalation point for incidents across enterprise banking and multi-cloud environments. Contained threats, tuned detections and kept the bank audit-ready.</p>
+            <div class="chips"><span>Incident response</span><span>Sentinel · Splunk</span><span>CrowdStrike</span><span>Threat hunting</span><span>Phishing &amp; BEC</span></div>
+          </div>
+        </article>
+        <article class="stop reveal">
+          <div class="meta">
+            <span class="when">2021 – 05/2022</span>
+            <p class="role">Cyber Security Associate</p>
+            <p class="org">ITC India Pvt Ltd</p>
+          </div>
+          <div class="story">
+            <h3>The tester.</h3>
+            <p>Broke into systems the way attackers do, so they could be fixed first. Ran vulnerability assessments and penetration tests on web apps, mobile apps, APIs and infrastructure, then wrote risk-rated reports with proof of concept and clear fixes.</p>
+            <div class="chips"><span>VAPT</span><span>Web app pentesting</span><span>OWASP Top 10</span><span>Network testing</span><span>API security</span><span>Re-testing fixes</span></div>
+          </div>
+        </article>
+        <article class="stop reveal">
+          <div class="meta">
+            <span class="when">2020 – 2021</span>
+            <p class="role">Full Stack Web Developer</p>
+            <p class="org">A2IT Technologies</p>
+          </div>
+          <div class="story">
+            <h3>The builder.</h3>
+            <p>Built web applications end to end, front end to back end. It's why the websites I build today are secure from the first line of code.</p>
+            <div class="chips"><span>Full stack</span><span>Web applications</span></div>
+          </div>
+        </article>
+        <p class="origin reveal">Where it started</p>
+      </div>
+
+      <div class="wins">
+        <div class="win reveal"><b>20%</b><span>faster incident response after I reworked triage workflows</span></div>
+        <div class="win reveal"><b>15%</b><span>less alert noise from detection rules I tuned in Sentinel and Splunk</span></div>
+        <div class="win reveal"><b>Hours</b><span>to contain a compromised account, not days</span></div>
+        <div class="win reveal"><b>Audit-ready</b><span>incident records for OSFI, PCI-DSS and SOC 2 reviews</span></div>
+      </div>
+
+      <div class="why reveal">
+        <h3>Why people hire me</h3>
+        <ul>
+          <li><strong>Bank-grade standards</strong> on every project, big or small.</li>
+          <li><strong>Builder, tester and defender</strong> in one person: I know how systems are made, attacked and protected.</li>
+          <li><strong>Clear reporting</strong> that leadership, developers and auditors can act on.</li>
+          <li><strong>Open to full-time roles,</strong> remote or hybrid.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <p class="eyebrow reveal">Toolkit</p>
+      <h2 class="h2 reveal" style="margin-top:12px">The tools I use daily.</h2>
+    </div>
+    <div class="marquee" aria-label="Tools">
+      <div class="lane" id="lane1"></div>
+      <div class="lane rev" id="lane2"></div>
+    </div>
+  </section>
+
+  <section id="certs" style="padding-top:0">
+    <div class="wrap">
+      <p class="eyebrow reveal">Certifications</p>
+      <h2 class="h2 reveal" style="margin-top:12px">Certified.</h2>
+      <div class="certs">
+        <div class="cert reveal" style="--c:var(--accent)"><b>CCSP</b><span>Certified Cloud Security Professional</span><small>ISC2</small></div>
+        <div class="cert reveal" style="--c:var(--accent2)"><b>SC-200</b><span>Security Operations Analyst Associate</span><small>Microsoft</small></div>
+        <div class="cert reveal" style="--c:#8f7cff"><b>AZ-500</b><span>Azure Security Engineer Associate</span><small>Microsoft</small></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="websites">
+    <div class="wrap">
+      <p class="eyebrow reveal">Websites for your business</p>
+      <h2 class="h2 reveal" style="margin-top:12px">A website that looks great<br><span class="grad">and is hard to hack.</span></h2>
+      <p class="lead reveal" style="margin-top:18px">I build websites for shops, salons, restaurants and small businesses across Canada and the US. I spent four years protecting a major bank, so your site gets the same care.</p>
+
+      <p class="sub reveal">Sample designs</p>
+      <div class="demos">
+        <figure class="demo reveal" style="--d1:#3b2a20;--d2:#f3e6d8;--d3:#c8743c">
+          <div class="dbar"><i></i><i></i><i></i><span>mapleandbean.ca</span></div>
+          <div class="dsite">
+            <div class="dnav"><b>Maple &amp; Bean</b><span>Menu · Visit · Order</span></div>
+            <div class="dhero"><small>Café · Kitchener</small><strong>Coffee roasted<br>down the street.</strong><em>Order ahead</em></div>
+            <div class="dgrid"><i></i><i></i><i></i></div>
+          </div>
+          <figcaption><b>Café</b><span>Menu, hours, online ordering</span></figcaption>
+        </figure>
+        <figure class="demo reveal" style="--d1:#1f1a24;--d2:#f6eef1;--d3:#b05a7a">
+          <div class="dbar"><i></i><i></i><i></i><span>studiolumiere.com</span></div>
+          <div class="dsite">
+            <div class="dnav"><b>Studio Lumière</b><span>Services · Book</span></div>
+            <div class="dhero"><small>Hair &amp; beauty salon</small><strong>Look like you,<br>only brighter.</strong><em>Book online</em></div>
+            <div class="dgrid"><i></i><i></i><i></i></div>
+          </div>
+          <figcaption><b>Salon</b><span>Services, prices, online booking</span></figcaption>
+        </figure>
+        <figure class="demo reveal" style="--d1:#14233a;--d2:#e9eef4;--d3:#e08a1e">
+          <div class="dbar"><i></i><i></i><i></i><span>northlinereno.com</span></div>
+          <div class="dsite">
+            <div class="dnav"><b>Northline Renovations</b><span>Projects · Quote</span></div>
+            <div class="dhero"><small>Home renovations</small><strong>Kitchens, baths<br>and basements.</strong><em>Free estimate</em></div>
+            <div class="dgrid"><i></i><i></i><i></i></div>
+          </div>
+          <figcaption><b>Contractor</b><span>Project gallery, quote requests</span></figcaption>
+        </figure>
+      </div>
+
+      <div class="included reveal">
+        <h3>Every website includes</h3>
+        <ul>
+          <li><strong>Works on every phone</strong> and computer</li>
+          <li><strong>The padlock (HTTPS)</strong> so customers trust it</li>
+          <li><strong>Protection from hackers</strong> and spam bots</li>
+          <li><strong>Automatic backups</strong> so nothing is lost</li>
+          <li><strong>Found on Google</strong> with basic SEO set up</li>
+          <li><strong>Fast loading,</strong> so visitors stay</li>
+        </ul>
+      </div>
+
+      <div class="plans">
+        <article class="plan reveal">
+          <p class="pname">Starter</p>
+          <p class="price"><b>$499</b><span>one time</span></p>
+          <p class="pfor">For a shop or service that needs a clean online presence.</p>
+          <ul><li>Up to 5 pages</li><li>Contact form and Google Maps</li><li>Security setup and HTTPS</li><li>Live in about 2 weeks</li></ul>
+        </article>
+        <article class="plan pop reveal">
+          <p class="flag">Most popular</p>
+          <p class="pname">Business</p>
+          <p class="price"><b>$999</b><span>one time</span></p>
+          <p class="pfor">For businesses that take bookings, orders or quotes online.</p>
+          <ul><li>Up to 10 pages</li><li>Online booking or ordering</li><li>Photo gallery and reviews</li><li>Google Business profile setup</li><li>Full security hardening</li></ul>
+        </article>
+        <article class="plan reveal">
+          <p class="pname">Care plan</p>
+          <p class="price"><b>$29</b><span>per month</span></p>
+          <p class="pfor">I look after your website so you can run your business.</p>
+          <ul><li>Hosting and HTTPS</li><li>Daily backups</li><li>Security updates and monitoring</li><li>Small text and photo changes</li><li>Priority help if something goes wrong</li></ul>
+        </article>
+      </div>
+      <p class="fine reveal">Prices in CAD. US clients pay the same numbers in USD. A domain name costs about $20 a year.</p>
+
+      <div class="process">
+        <h3 class="reveal">How it works</h3>
+        <ol>
+          <li class="reveal"><b>Free call</b><span>Tell me about your business. You get a fixed quote, with no surprises.</span></li>
+          <li class="reveal"><b>Design</b><span>You see your homepage design in about a week.</span></li>
+          <li class="reveal"><b>Launch</b><span>Your site goes live, secured and backed up, in about two weeks.</span></li>
+          <li class="reveal"><b>Care</b><span>I keep it updated and safe, so you don't have to.</span></li>
+        </ol>
+      </div>
+
+      <div class="faq">
+        <h3 class="reveal">Questions</h3>
+        <details class="reveal"><summary>Do I own my website?</summary><p>Yes. The domain, the content and the design are yours, even if you stop the care plan.</p></details>
+        <details class="reveal"><summary>Is there a monthly cost?</summary><p>Only if you choose the care plan ($29 a month). Otherwise you pay for hosting and your domain directly, and I help you set them up.</p></details>
+        <details class="reveal"><summary>Can you fix or redo my current website?</summary><p>Yes. I can redesign it, make it faster, or check it for security problems and fix them.</p></details>
+        <details class="reveal"><summary>Do you work with clients outside Kitchener?</summary><p>Yes. I work with businesses anywhere in Canada and the US, fully online.</p></details>
+        <details class="reveal"><summary>What if my site gets hacked?</summary><p>Care plan clients get priority help: I find the problem, clean it up and lock the site down. Security is my profession.</p></details>
+      </div>
+
+      <div class="cta reveal" style="margin-top:44px"><a class="pill big" href="#contact">Get a free quote</a></div>
+    </div>
+  </section>
+
+  <section id="contact" class="contact" style="background:var(--bg2)">
+    <div class="wrap">
+      <h2 class="h2 reveal">Let's <span class="grad">talk.</span></h2>
+      <p class="lead reveal" style="margin:20px auto 0">Hiring for a security role, or need a website for your business? Send me an email and I'll reply within a day.</p>
+      <div class="mail reveal">
+        <code id="email">dktechcyber@gmail.com</code>
+        <button class="pill" id="copy" type="button">Copy email</button>
+      </div>
+      <div class="social reveal">
+        <a class="pill ghost" href="https://www.linkedin.com/in/dk-rajput" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5zM3 9h4v12H3zM9 9h3.8v1.7h.1c.5-1 1.8-2 3.8-2 4 0 4.8 2.6 4.8 6V21h-4v-5.6c0-1.3 0-3-1.9-3s-2.1 1.4-2.1 2.9V21H9z"/></svg>LinkedIn</a>
+        <a class="pill ghost" href="https://github.com/rajput-deepak" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-3.2 19.5c.5.1.7-.2.7-.5v-1.7c-2.8.6-3.4-1.2-3.4-1.2-.4-1.2-1.1-1.5-1.1-1.5-.9-.6.1-.6.1-.6 1 .1 1.5 1 1.5 1 .9 1.5 2.3 1.1 2.9.8.1-.6.4-1.1.6-1.3-2.2-.3-4.6-1.1-4.6-5 0-1.1.4-2 1-2.7-.1-.3-.4-1.3.1-2.7 0 0 .8-.3 2.8 1a9.6 9.6 0 0 1 5 0c2-1.3 2.8-1 2.8-1 .5 1.4.2 2.4.1 2.7.6.7 1 1.6 1 2.7 0 3.9-2.4 4.7-4.6 5 .4.3.7.9.7 1.9V21c0 .3.2.6.7.5A10 10 0 0 0 12 2z"/></svg>GitHub</a>
+      </div>
+      <div class="meta reveal">
+        <div><b>Based in</b>Kitchener, ON</div>
+        <div><b>Available for</b>Full-time · Remote or hybrid</div>
+        <div><b>Websites for</b>Canada &amp; US</div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer><div class="wrap"><span>© 2026 Deepak Kumar</span><span>Deepak Kumar | Cybersecurity Engineer</span></div></footer>
+
+<script>
+(() => {
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // Toolkit marquee
+  const t1 = ['Microsoft Sentinel','Splunk','CrowdStrike Falcon','Defender for Endpoint','SentinelOne','IBM QRadar','LogRhythm','KQL','SPL','MITRE ATT&CK'];
+  const t2 = ['Qualys VMDR','Entra ID','AWS CloudTrail','GuardDuty','GCP & GKE','Python','PowerShell','GitHub Actions','VirusTotal','Any.run','URLScan','OWASP Top 10','VAPT'];
+  const fill = (el, items) => { const h = items.map(x => `<span>${x.replace('&','&amp;')}</span>`).join(''); el.innerHTML = h + h; };
+  fill(document.getElementById('lane1'), t1);
+  fill(document.getElementById('lane2'), t2);
+
+  // Copy email
+  const btn = document.getElementById('copy'), em = document.getElementById('email');
+  btn.addEventListener('click', () => {
+    const done = () => { btn.textContent = 'Copied'; setTimeout(() => btn.textContent = 'Copy email', 1800); };
+    const fallback = () => { const r = document.createRange(); r.selectNodeContents(em); const s = getSelection(); s.removeAllRanges(); s.addRange(r); btn.textContent = 'Selected, press copy'; setTimeout(() => btn.textContent = 'Copy email', 2200); };
+    try { navigator.clipboard.writeText(em.textContent).then(done, fallback); } catch (e) { fallback(); }
+  });
+
+  if (reduce) return;
+
+  // Scroll-scrubbed statement
+  const scrub = document.getElementById('scrub');
+  const hl = new Set(['answer','contain','never']);
+  scrub.innerHTML = scrub.textContent.split(' ').map(w => `<span class="w${hl.has(w.replace(/[^a-z]/gi,'').toLowerCase()) ? ' hl' : ''}">${w}</span>`).join(' ');
+  scrub.classList.add('js-scrub');
+  const words = scrub.querySelectorAll('.w');
+
+  const console_ = document.getElementById('console');
+  const expand = document.getElementById('expand'), panel = document.getElementById('panel');
+  const track = document.getElementById('track');
+  const pathEl = document.getElementById('path');
+  const clamp = v => Math.max(0, Math.min(1, v));
+
+  let ticking = false;
+  const onScroll = () => {
+    ticking = false;
+    const vh = innerHeight;
+    // console tilts flat as you scroll
+    const c = console_.getBoundingClientRect();
+    const g = clamp(1 - (c.top - vh * 0.25) / (vh * 0.6));
+    console_.style.setProperty('--tilt', ((1 - g) * 14).toFixed(2));
+    console_.style.setProperty('--grow', g.toFixed(3));
+    // words light up
+    const r = scrub.getBoundingClientRect();
+    const p = clamp((vh * 0.85 - r.top) / (r.height + vh * 0.35));
+    const n = Math.round(p * words.length);
+    words.forEach((w, i) => w.classList.toggle('lit', i < n));
+    // expanding panel
+    const e = expand.getBoundingClientRect();
+    const pe = clamp(-e.top / (e.height - vh) * 1.6);
+    panel.style.setProperty('--p', pe.toFixed(3));
+    // case-study progress line
+    const pa = pathEl.getBoundingClientRect();
+    pathEl.style.setProperty('--r', clamp((vh * 0.6 - pa.top) / pa.height).toFixed(3));
+    const tr = track.getBoundingClientRect();
+    track.style.setProperty('--q', clamp((vh * 0.9 - tr.top) / (vh * 0.7)).toFixed(3));
+  };
+  addEventListener('scroll', () => { if (!ticking) { ticking = true; requestAnimationFrame(onScroll); } }, { passive: true });
+  addEventListener('resize', onScroll);
+  onScroll();
+
+  // Stat count-up when it comes into view
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(en => {
+      if (!en.isIntersecting) return;
+      io.unobserve(en.target);
+      const el = en.target, end = +el.dataset.n, pre = el.dataset.p || '', suf = el.dataset.s || '';
+      const t0 = performance.now(), dur = 1400;
+      const step = now => {
+        const k = Math.min(1, (now - t0) / dur), ease = 1 - Math.pow(1 - k, 4);
+        el.textContent = pre + Math.round(end * ease) + suf;
+        if (k < 1) requestAnimationFrame(step);
+      };
+      requestAnimationFrame(step);
+    });
+  }, { threshold: 0.6 });
+  document.querySelectorAll('.stat b').forEach(b => io.observe(b));
+
+  // Live triage feed
+  const feed = document.getElementById('feed');
+  const alerts = [
+    ['crit','Credential dumping attempt','Defender for Endpoint · T1003','Host isolated'],
+    ['high','Mass file download, new device','Entra ID · Sentinel · T1530','Access revoked'],
+    ['med','Lookalike domain in invoice email','M365 · SPF fail · T1566','Sender blocked'],
+    ['high','Suspicious OAuth app consent','Entra ID · T1528','Consent removed'],
+    ['crit','Ransomware note pattern on share','CrowdStrike · T1486','Host isolated'],
+    ['med','Port scan from internal host','Splunk · T1046','Ticket closed'],
+    ['high','Disabled MFA on admin account','Entra ID · Sentinel · T1556','MFA restored']
+  ];
+  let ai = 0;
+  setInterval(() => {
+    if (document.hidden) return;
+    const [sev, title, src, outcome] = alerts[ai++ % alerts.length];
+    const li = document.createElement('li');
+    li.className = 'row';
+    li.innerHTML = `<i class="sev ${sev}"></i><div><strong>${title}</strong><small>${src}</small></div><span class="state">Investigating…</span>`;
+    feed.prepend(li);
+    while (feed.children.length > 4) feed.lastElementChild.remove();
+    setTimeout(() => { const s = li.querySelector('.state'); s.textContent = outcome; s.classList.add('done'); }, 1600);
+  }, 3400);
+})();
+</script>
+
+</body>
+</html>
